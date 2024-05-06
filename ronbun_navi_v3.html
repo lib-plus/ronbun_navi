@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"/>
+<title>地域関連論文等ナビゲーター（墨田区の例）</title>
+<style type="text/css">
+*{margin:0; padding:0;line-height:130%;}
+#htu{margin-left:1em;}
+#t_list{margin-left:1em;}
+#r_list{margin-left:1em;}
+ul.key_list{
+  list-style-type:none;
+  width:99%;
+}
+ul.key_list li{
+  float:left;
+  margin:0.1em;
+  width:6em;
+  text-align:center;
+  border:solid 1px #999999;
+  text-decoration:none;
+}
+ul.key_list li.selected{
+  background-color:#ffcc66;
+}
+a{text-decoration:none;}
+</style>
+<script type="text/javascript">
+//検索キーワードを記述。初期値は一番左のキーワード。この例では，墨田区の例で適当に設定しています。
+var key = ["隅田川","相撲","スカイツリー","震災","花火","北斎"];
+//CiNiiへのリクエストを作成（上の検索キーワードと適宜組み合わせる）。appid（必須）はアプリの作成者がCiNiiのサイトで取得し，設定すること（重要！）。なお，最大200件まで取得する設定としている。
+//var query = "https://ci.nii.ac.jp/opensearch/search?appid=CiNii10-e378a473bd9506dd6ce4bd52ec35de73&count=200&range=2&sortorder=1&format=json&q=";
+//文献・論文・研究データを検索
+var query = "https://cir.nii.ac.jp/opensearch/all?appid=CiNii10-e378a473bd9506dd6ce4bd52ec35de73&count=200&hasLinkToFullText=true&resourceType=conference paper,data paper,departmental bulletin paper,editorial,journal article,newspaper,periodical,review article,software paper,article,journal_article,book,Audiovisual,Collection,Dataset,Event,Image,InteractiveResource,Model,PhysicalObject,Service,Software,Sound,Text,Workflow,Other,journal&sortorder=0&format=json&q=";
+
+function initialize() {//初期化関数。最初に実行される。
+  var kl = key[0];
+  re_init(kl);//表示切替用関数の呼出
+}
+
+function re_init(kl){//表示切替用関数
+  var tl = document.getElementById("t_list");
+  tl.innerHTML ="";
+  var lis = document.createElement("ul");
+  lis.className = "key_list";
+  for (n = 0; n < key.length;n++) {//検索キーワード一覧（タブ）の作成
+   if(kl == key[n]){ //選択した検索キーワードのタブは色を付けて表示
+    lis.innerHTML += "<li class=\"selected\">" + key[n] + "<\/li>";
+   }else{//他のタブは，クリックして切り替えられるようにして表示
+    lis.innerHTML += "<li><a href =\"#\" onClick=\"re_init('" + key[n] + "')\">" + key[n] + "<\/a><\/li>";
+   }
+  }
+  tl.appendChild(lis);
+  tl.innerHTML += "<br clear=\"all\" \/>";
+  
+  //書出関数を呼び出し，選択した検索キーワードに応じた，CiNii検索結果を表示
+  readJson(kl);
+}
+
+function readJson(kl){//書出関数
+var rf = document.getElementById("r_list");
+rf.innerHTML = "";
+var lis2 = document.createElement("ul");
+var url = encodeURI(query + kl);//選択キーワードでリクエストを作成
+//CiNiiと通信して検索結果を取得し，表示（JSON-LD）
+fetch(url)
+.then(function (fdata) {
+  return fdata.json();//読み込むデータをJSONに設定
+})
+.then(function (data) {
+  for (i=0; i < data.items.length; i++){
+    lis2.innerHTML += "<li style=\"list-style:none;\"><a href=\"" + data.items[i]["@id"] + "\">" + data.items[i].title + "<\/a>／<small><b>" + data.items[i]["prism:publicationName"] + "／" + data.items[i]["prism:publicationDate"] + "／" + data.items[i]["dc:type"] + "<\/b><\/small><\/li>";
+  }
+});
+rf.appendChild(lis2);
+}
+</script>
+</head>
+<body>
+<h2>地域関連論文等ナビゲーター（墨田区の例）</h2>
+<hr>
+<div id="htu">
+地域に関連するキーワードで，国立情報学研究所の提供する「<a href="https://cir.nii.ac.jp/ja">CiNii Research</a>」を検索し，画面上で全文が読める論文・研究データ等の一覧を表示します。キーワードを選択するとそれに関連したリソースの一覧に表示が切り替わります。なお，最近作られたものから順に最大200件表示されています。
+</div>
+<hr />
+<div id="t_list"><!--検索キーワードのタブの一覧--></div>
+<div id="r_list"><!--選択された検索キーワードに応じたCiNii検索結果（新しいものから200件まで）--></div>
+<script type="text/javascript">
+initialize();//初期化関数の実行
+</script>
+</body>
+</html>
