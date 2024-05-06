@@ -30,9 +30,8 @@ a{text-decoration:none;}
 //検索キーワードを記述。初期値は一番左のキーワード。この例では，墨田区の例で適当に設定しています。
 var key = ["隅田川","相撲","スカイツリー","震災","花火","北斎"];
 //CiNiiへのリクエストを作成（上の検索キーワードと適宜組み合わせる）。appid（必須）はアプリの作成者がCiNiiのサイトで取得し，設定すること（重要！）。なお，最大200件まで取得する設定としている。
-//var query = "https://ci.nii.ac.jp/opensearch/search?appid=CiNii10-e378a473bd9506dd6ce4bd52ec35de73&count=200&range=2&sortorder=1&format=json&q=";
 //文献・論文・研究データを検索
-var query = "https://cir.nii.ac.jp/opensearch/all?appid=CiNii10-e378a473bd9506dd6ce4bd52ec35de73&count=200&hasLinkToFullText=true&resourceType=conference paper,data paper,departmental bulletin paper,editorial,journal article,newspaper,periodical,review article,software paper,article,journal_article,book,Audiovisual,Collection,Dataset,Event,Image,InteractiveResource,Model,PhysicalObject,Service,Software,Sound,Text,Workflow,Other,journal&sortorder=0&format=json&q=";
+var query = "https://cir.nii.ac.jp/opensearch/all?appid=CiNiixxx&count=200&hasLinkToFullText=true&resourceType=conference paper,data paper,departmental bulletin paper,editorial,journal article,newspaper,periodical,review article,software paper,article,journal_article,book,Audiovisual,Collection,Dataset,Event,Image,InteractiveResource,Model,PhysicalObject,Service,Software,Sound,Text,Workflow,Other,journal&sortorder=0&format=json&q=";
 
 function initialize() {//初期化関数。最初に実行される。
   var kl = key[0];
